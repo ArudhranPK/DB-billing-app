@@ -1,7 +1,7 @@
-#importing all the required packages
+# importing all the required packages
 from tkinter import *
 from tkinter import messagebox
-from database import authentication, create_a_new_bill, delete_records, get_customer_bill, get_main_bill, get_bill_no, delete_customer_bill, save_bill
+from database import *
 
 #colors
 black = "#000000"
@@ -14,22 +14,22 @@ cyan = "#00FFFF"
 purple = "#A64DFF"
 orange = "#FF8533"
 
-#preping a window
+# preping a window
 root = Tk()
 root.title("BILLING APP")
 root.configure(background = black)
 
-#setting an icon for the app
+# setting an icon for the app
 icon_image = PhotoImage(file = r"billing app icon.png")
 root.tk.call('wm', 'iconphoto', root._w, icon_image)
 
-#clearing all the widgets from the page to make room for the next page
+# clearing all the widgets from the page to make room for the next page
 def clear_page():
     for widget in root.grid_slaves():
         widget.destroy()
 
 
-#command for the exit button
+# command for the exit button
 def exit():
     global exit_window
     exit_window = Tk()
@@ -45,7 +45,7 @@ def exit():
     no_button.grid(row = 1, column = 1, padx = 2, pady = 2)
 
 
-#this function destroys the eintire app by closing the all the windows and quiting
+# this function destroys the eintire app by closing the all the windows and quiting
 def destroy_app(a):
     global root
     if a == 1:
@@ -56,16 +56,16 @@ def destroy_app(a):
         exit_window.destroy()
 
 
-#destroying all the widgets in the left side frame
+# destroying all the widgets in the left side frame
 def clear_left_frame():
     
     for widgets in left_side_frame.winfo_children():
         widgets.destroy()
 
 
-#we set the output_box state to disabled so that the user can't change anything in the output box
-#It is only used to see the output bill
-#changing the state from disabled to normal so that the system can edit the content in the output box
+# we set the output_box state to disabled so that the user can't change anything in the output box
+# It is only used to see the output bill
+# changing the state from disabled to normal so that the system can edit the content in the output box
 def clear_a_line_in_text_box(line):
     output_box.config(state = NORMAL)
     output_box.delete(float(line), float(line + 1))
@@ -90,11 +90,11 @@ def display_in_output_box(string, position = -1):
     output_box.config(state = DISABLED)
 
 
-#login gui for the user with login button.
+# login gui for the user with login button.
 def login_gui():
-    #entry boxes for username and password and passing the parameters to the button function
+    # entry boxes for username and password and passing the parameters to the button function
 
-    #this is for clearing the page when the login button is pressed
+    # this is for clearing the page when the login button is pressed
     try:
         clear_page()
     except:
@@ -118,17 +118,17 @@ def login_gui():
     login_button.grid(row = 3, column = 1, padx = 4, pady = 4, sticky = E)
 
 
-#login code to execute to authenticate the username  and the password entered by the user
+# login code to execute to authenticate the username  and the password entered by the user
 def login_button_func(username_input, password_input):
     if authentication(username_input, password_input):
-        #savind the username to know who made pa bill
+        # savind the username to know who made pa bill
         global username
         username = username_name_entry.get()
 
-        #wiping the entire page and changing the gui to the mainpage
+        # wiping the entire page and changing the gui to the mainpage
         clear_page()
 
-        #creating two frames to sperate the output box and all the buttons and lables
+        # creating two frames to sperate the output box and all the buttons and lables
         global left_side_frame
         global right_side_frame
 
@@ -141,26 +141,26 @@ def login_button_func(username_input, password_input):
         main_page()
 
     else:
-        #error pop up,clear the entry widgets ask the user to re-enter all the creadentials
+        # error pop up,clear the entry widgets ask the user to re-enter all the creadentials
         messagebox.showerror("ACCESS DENIED!!","Wrong username or password entered!")
         password_entry.delete(0, END)
         username_name_entry.delete(0, END)
 
 
-#creating main page where user can access all the commands like "new bill"
+# creating main page where user can access all the commands like "new bill"
 def main_page():
 
     clear_left_frame()
-    #clear_the_entire_text_box()
+    # clear_the_entire_text_box()
 
-    #getting data of main_bill from database.
+    # getting data of main_bill from database.
     global database_bill_no
     database_bill_no = get_bill_no()
 
     global main_bill_raw
     main_bill_raw = get_main_bill()    
 
-    #LEFT FRAME
+    # LEFT FRAME
     home_label = Label(left_side_frame, text = "HOME", width = 30, height = 5, background = black, foreground = orange, font = (100))
     home_label.grid(row = 0, column = 0 , padx = 10 , pady = 20, sticky = EW)
 
@@ -182,13 +182,13 @@ def main_page():
     log_out_button = Button(left_side_frame, text = "LOGOUT", background = purple, foreground = black, command = lambda : login_gui())
     log_out_button.grid(row = 5, column = 0, sticky = E, padx = 10, pady = 20)
 
-    #RIGHT FRAME
+    # RIGHT FRAME
     global output_box
 
     output_box = Text(right_side_frame, width = 95,height = 30, background = white, foreground = black, state = DISABLED)
     output_box.grid(column = 0, row = 0, padx = 5, pady = 5)
 
-    #show the main bill in the output box
+    # show the main bill in the output box
     text = """+-------------+---------------------------+-----------------+--------------+-----------------+
 | BILL NUMBER | CUSTOMER NAME             | PHONE NO.       | TOTAL        | BILLER NAME     |
 +-------------+---------------------------+-----------------+--------------+-----------------+\n"""
@@ -206,9 +206,9 @@ def main_page():
     display_in_output_box(text)
     
 
-#this page is to show the desired bill entered by the user
+# this page is to show the desired bill entered by the user
 def show_bill_page():
-    #destroying all widgets in left frame to make room for new widgets 
+    # destroying all widgets in left frame to make room for new widgets 
     clear_left_frame()
 
     input_label=Label(left_side_frame, text= "Enter the bill number to display",background=black, foreground= white)
@@ -228,7 +228,7 @@ def show_bill_page():
     back_button.grid(row =3, column = 2, padx = 5, pady = 15, sticky = E)
 
 
-#validates whether the given bill is there in the database and the entered bill is an integer
+# validates whether the given bill is there in the database and the entered bill is an integer
 def show_bill_validation():
     show_bill_number = input_bill_no.get()
 
@@ -247,7 +247,7 @@ def show_bill_validation():
 
             bill = get_customer_bill(show_bill_number)
 
-            #SHOWING THE BILL
+            # SHOWING THE BILL
             text = """+------+-------------------------------------+--------+-----+-----------+
 | S.NO | PRODUCT NAME                        | PRICE  | QTY | TOTAL     |
 +------+-------------------------------------+--------+-----+-----------+\n"""
@@ -268,13 +268,13 @@ def show_bill_validation():
 |                                               GRAND TOTAL : {grand_tot}{((10 - len(str(grand_tot))) * ' ')}|
 +------+-------------------------------------+--------+-----+-----------+"""
 
-            #making room for the desired output
+            # making room for the desired output
             clear_the_entire_text_box()
-            #displaying the bill in the output box
+            # displaying the bill in the output box
             display_in_output_box(text)
     
-    #showing error to the user when the entered bill no is not integer or
-    #when the entered bill no is not there in database 
+    # showing error to the user when the entered bill no is not integer or
+    # when the entered bill no is not there in database 
         else:
             messagebox.showerror("BILL DIDN'T EXIST", "Bill no doesn't exist in the database")
             input_bill_no.delete(0, END)
@@ -285,10 +285,10 @@ def show_bill_validation():
 
 def add_bill_page():
 
-    #destroying all the widgets in the left side frame
+    # destroying all the widgets in the left side frame
     clear_left_frame()
     
-    #displaying all the widgets for getting customer name, phone number, bill number
+    # displaying all the widgets for getting customer name, phone number, bill number
     add_bill_page_label = Label(left_side_frame, text = "ADD A NEW BILL", background = black, foreground = orange, font = (100))
     add_bill_page_label.grid(row = 0, column = 0, columnspan = 2, padx = 10, pady = 20, sticky = N)
 
@@ -323,7 +323,7 @@ def add_bill_page():
     back_button.grid(row = 5, column = 1, sticky = E, padx = 10, pady = 20)
 
 def add_validation():
-    #this function is to validate whether the given credentials are correct
+    # this function is to validate whether the given credentials are correct
     global customer_name
     global phone_number
     global bill_number
@@ -333,43 +333,43 @@ def add_validation():
     bill_number = bill_number_entry.get().replace(" ","")
 
     message = ""
-    #to chech whether the given bill number is all numeric so that we can type cast it to integer
+    # to chech whether the given bill number is all numeric so that we can type cast it to integer
     if bill_number.isnumeric() == False:
-        message += "# Bill no. can't take alphabets or special chracters!!\n"
+        message += "#  Bill no. can't take alphabets or special chracters!!\n"
     else:
         bill_number = int(bill_number)
 
-    #making sure the given credentials are of correct length and data type 
+    # making sure the given credentials are of correct length and data type 
     if str(bill_number).isnumeric() == False or bill_number in database_bill_no or len(customer_name) > 15 or len(str(bill_number)) > 10 or len(phone_number) > 15 or customer_name == "" or phone_number == "":
         
         if bill_number in database_bill_no:
-            message += "# Bill no. already exist!\n"
+            message += "#  Bill no. already exist!\n"
         if len(customer_name) > 15:
-            message += "# Customer name has greater than 15 characters!\n"
+            message += "#  Customer name has greater than 15 characters!\n"
         if len(str(bill_number)) > 10:
-            message += "# Bill no. has greater than 10 characters!\n"
+            message += "#  Bill no. has greater than 10 characters!\n"
         if len(phone_number) > 15:
-            message += "# Phone no. has greater than 15 characters!"
+            message += "#  Phone no. has greater than 15 characters!"
         
-        #informing user about the invalid input given
+        # informing user about the invalid input given
         messagebox.showwarning(title = "INVALID INPUTS!!", message = message)
     
     else:
-        #next operation page
+        # next operation page
         customer_name = customer_name.title()
         add_modify_operation_page("add")
 
 
-#this page is used by both add and modify section of code
-#with few alteration we can change the code by passing different parameter
+# this page is used by both add and modify section of code
+# with few alteration we can change the code by passing different parameter
 def add_modify_operation_page(add_or_modify):
     
-    #cleaning the left frame to add new widgets and clearing the right output textbox to
-    #display the bill items and list them
+    # cleaning the left frame to add new widgets and clearing the right output textbox to
+    # display the bill items and list them
     clear_left_frame()
     clear_the_entire_text_box()
 
-    #widgets for left frame
+    # widgets for left frame
     add_bill_page_label = Label(left_side_frame, text = "ADD A NEW BILL", background = black, foreground = orange, font = (100))
     add_bill_page_label.grid(row = 0, column = 0, columnspan = 2, padx = 10, pady = 15, sticky = N)
 
@@ -417,7 +417,7 @@ def add_modify_operation_page(add_or_modify):
     back_button.grid(row = 8, column = 1, padx = 10, pady = 15, sticky = E)
 
     
-    #preparing for the output box
+    # preparing for the output box
     global text
     text = """+------+-------------------------------------+--------+-----+-----------+
 | S.NO | PRODUCT NAME                        | PRICE  | QTY | TOTAL     |
@@ -431,7 +431,7 @@ def add_modify_operation_page(add_or_modify):
     global total
     serial_no, grand_total, products, price, quantity, total = 0, 0, [], [], [], []
 
-    #by passing different parameter we can choose between modify and add functions 
+    # by passing different parameter we can choose between modify and add functions 
     if add_or_modify == "modify":
 
         customer_bill = get_customer_bill(bill_number)
@@ -459,13 +459,13 @@ def add_modify_operation_page(add_or_modify):
 
     display_in_output_box(text)
 
-    #this remainds the user to save the bill before leaving to home page
-    #there is a function in save_bill command to implement.  
+    # this remainds the user to save the bill before leaving to home page
+    # there is a function in save_bill command to implement.  
     global remind_save_bill
     remind_save_bill = False
 
 
-#validates whether the entered credentials is valid
+# validates whether the entered credentials is valid
 def add_product_function_validation():
     global product_name
     global product_price
@@ -481,45 +481,45 @@ def add_product_function_validation():
     text = ""
     if len(str(serial_no)) > 4 or len(product_name) > 35 or product_price.isnumeric() == False or len(str(product_price)) > 6 or product_quantity.isnumeric() == False or len(str(product_quantity)) > 3 or (int(grand_total) + (int(product_price) * (int(product_quantity)))) > 9999999999:
         if len(str(serial_no)) > 4:
-            text += "# Only 9999 products can be stored in a bill.\n"
+            text += "#  Only 9999 products can be stored in a bill.\n"
 
         if len(product_name) > 35:
-            text += f"# Reduce the name of product by {len(product_name) - 35} characters.\n"
+            text += f"#  Reduce the name of product by {len(product_name) - 35} characters.\n"
 
         if product_price.isnumeric() == False:
-            text += "# Price cannot take alphabets of any special characters.\n"
+            text += "#  Price cannot take alphabets of any special characters.\n"
             grand = False
         else:
             product_price = int(product_price)
 
         if len(str(product_price)) > 6:
-            text += "# Price can take value upto 9,99,999.\n"
+            text += "#  Price can take value upto 9,99,999.\n"
 
         if product_quantity.isnumeric() == False:
-            text += "# Price cannot take alphabets of any special characters.\n"
+            text += "#  Price cannot take alphabets of any special characters.\n"
             grand = False
         else:
             product_quantity = int(product_quantity)
 
         if len(str(product_quantity)) > 3:
-            text += "# Price can take value upto 999.\n"
+            text += "#  Price can take value upto 999.\n"
 
         if grand_total + (product_price * product_quantity) > 9999999999:
-            text += "# Grand total cannot take value greater than 999,99,99,999. Click save bill and make a new bill.\n"
+            text += "#  Grand total cannot take value greater than 999,99,99,999. Click save bill and make a new bill.\n"
         
-        #informing the user about the error
+        # informing the user about the error
         messagebox.showerror("ERROR", text)
     else:
-        add_product_function()#checking whether the given bill no is there in database
+        add_product_function()# checking whether the given bill no is there in database
 
 def add_product_function():
     global serial_no, grand_total, product_quantity, product_price
 
-    #type casting the required variables
+    # type casting the required variables
     product_quantity = int(product_quantity)
     product_price = int(product_price)
 
-    #adding all the necessary details to the list
+    # adding all the necessary details to the list
     products.append(product_name)
     price.append(product_price)
     quantity.append(product_quantity)
@@ -529,7 +529,7 @@ def add_product_function():
     serial_no += 1
     grand_total += total_price
 
-    #making text for displaying output
+    # making text for displaying output
     text = ""
 
     if serial_no > 1:
@@ -542,7 +542,7 @@ def add_product_function():
     text += f"| {product_quantity}{((3 - len(str(product_quantity))) * ' ')} "
     text += f"| {total_price}{((9 - len(str(total_price))) * ' ')} |"
     
-    #clearing the required lines to accommodate for the added item
+    # clearing the required lines to accommodate for the added item
     if serial_no > 2:
 
         clear_a_line_in_text_box(serial_no * 2 + 1)
@@ -553,13 +553,13 @@ def add_product_function():
         clear_a_line_in_text_box(serial_no + 3)
         clear_a_line_in_text_box(serial_no + 3)
 
-    text = f"""\n+------+-------------------------------------+--------+-----+-----------+
+    text += f"""\n+------+-------------------------------------+--------+-----+-----------+
 |                                               GRAND TOTAL : {grand_total}{((10 - len(str(grand_total))) * ' ')}|
 +------+-------------------------------------+--------+-----+-----------+"""
     
     display_in_output_box(text)
     
-    #changing the value to true to remind the user to save bill
+    # changing the value to true to remind the user to save bill
     global remind_save_bill
     remind_save_bill = True
 
@@ -573,17 +573,17 @@ def delete_an_item(s_number):
     global grand_total
 
     try:
-        #making the entered number positive even if the entered number is negative
+        # making the entered number positive even if the entered number is negative
         s_number = int(s_number).__abs__()
         if s_number <= serial_no:
             
-            #clearing the line according to the serial no entered by the user
+            # clearing the line according to the serial no entered by the user
             if s_number < 2 :
                 clear_entire_text_box_from_start_line(3 + s_number)
             else:
                 clear_entire_text_box_from_start_line((s_number * 2) + 2)
 
-            #deleting the items from the lists
+            # deleting the items from the lists
             del products[s_number - 1]
             del price[s_number - 1]
             del quantity[s_number - 1]
@@ -591,7 +591,7 @@ def delete_an_item(s_number):
             del total[s_number - 1]
             serial_no -= 1
 
-            #preparing new test for output
+            # preparing new test for output
             text = "\n"
             try:
                 for i in range(s_number - 1, len(products)):
@@ -621,7 +621,7 @@ def delete_an_item(s_number):
     delete_product_entry.delete(0, END)
     
 
-#validate for back button
+# validate for back button
 def back_button_validation():
 
     global remind_save_bill
@@ -651,7 +651,7 @@ def save_bill_database():
 
 def modify_bill_page():
 
-    #clearing left frame for new widgets
+    # clearing left frame for new widgets
     clear_left_frame()
     modify_input_label=Label(left_side_frame, text= "Enter the bill number to modify",background=black, foreground= white)
     modify_input_label.grid(row=0,column=1, padx = 5,pady = 10, sticky=EW)
@@ -670,7 +670,7 @@ def modify_bill_page():
     back_button.grid(row =3, column = 2, padx = 5, pady = 15, sticky = E)
 
 
-#validation for modify page
+# validation for modify page
 def modify_bill_validation():
 
     modify_bill_number = modify_input_bill_no.get()
@@ -678,7 +678,7 @@ def modify_bill_validation():
     if modify_bill_number.isnumeric():
 
         modify_bill_number = int(modify_bill_number)
-        #checking whether the given bill no is there in database
+        # checking whether the given bill no is there in database
         if modify_bill_number in database_bill_no:
 
             global bill_number
@@ -693,7 +693,7 @@ def modify_bill_validation():
 
 
 def delete_bill_page():
-    #clearing left frame for new widgets
+    # clearing left frame for new widgets
     clear_left_frame()
 
     del_input_label=Label(left_side_frame, text= "Enter the bill number to delete",background=black, foreground= white)
@@ -719,11 +719,11 @@ def delete_bill_validation():
     if delete_bill_number.isnumeric():
         
         delete_bill_number = int(delete_bill_number)
-        #checking whether the given bill no is there in database
+        # checking whether the given bill no is there in database
         if delete_bill_number in database_bill_no:
         
             delete_customer_bill(delete_bill_number)
-            #clearing the output box for main page
+            # clearing the output box for main page
             clear_the_entire_text_box()
             main_page()
         else:
