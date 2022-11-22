@@ -16,7 +16,7 @@ orange = "#FF8533"
 
 # preping a window
 root = Tk()
-root.title("SANDHANAM PHARMACY")
+root.title("BILLING APP")
 root.configure(background = black)
 
 # setting an icon for the app
