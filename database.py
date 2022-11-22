@@ -4,7 +4,7 @@ import mysql.connector
 def authentication(username, password):
     try:
         global mysql_con
-        mysql_con = mysql.connector.connect(host = "localhost", user = "arudhran", password = "arudhran", db = "billing_app")
+        mysql_con = mysql.connector.connect(host = "localhost", user = username, password = password, db = "billing_app")
 
         global mysql_cursor
         mysql_cursor = mysql_con.cursor()
