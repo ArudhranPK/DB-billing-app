@@ -16,7 +16,7 @@ orange = "#FF8533"
 
 # preping a window
 root = Tk()
-root.title("BILLING APP")
+root.title("SANDHANAM PHARMACY")
 root.configure(background = black)
 
 # setting an icon for the app
@@ -531,6 +531,17 @@ def add_product_function():
     serial_no += 1
     grand_total += total_price
 
+    # clearing the required lines to accommodate for the added item
+    if serial_no > 2:
+
+        clear_a_line_in_text_box(serial_no * 2 + 1)
+        clear_a_line_in_text_box(serial_no * 2 + 1)
+        clear_a_line_in_text_box(serial_no * 2 + 1)
+    else:
+        clear_a_line_in_text_box(serial_no + 3)
+        clear_a_line_in_text_box(serial_no + 3)
+        clear_a_line_in_text_box(serial_no + 3)
+
     # making text for displaying output
     text = ""
 
@@ -545,16 +556,6 @@ def add_product_function():
     text += f"| {total_price}{((9 - len(str(total_price))) * ' ')} |"
     
     display_in_output_box(text)
-    # clearing the required lines to accommodate for the added item
-    if serial_no > 2:
-
-        clear_a_line_in_text_box(serial_no * 2 + 1)
-        clear_a_line_in_text_box(serial_no * 2 + 1)
-        clear_a_line_in_text_box(serial_no * 2 + 1)
-    else:
-        clear_a_line_in_text_box(serial_no + 3)
-        clear_a_line_in_text_box(serial_no + 3)
-        clear_a_line_in_text_box(serial_no + 3)
 
     text = f"""\n+------+-------------------------------------+--------+-----+-----------+
 |                                               GRAND TOTAL : {grand_total}{((10 - len(str(grand_total))) * ' ')}|
